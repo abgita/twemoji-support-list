@@ -1,4 +1,4 @@
-# Twemoji support list
+# 🗒 Twemoji support list
 
 ![npm](https://img.shields.io/npm/v/twemoji-support-list)
 
