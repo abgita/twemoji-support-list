@@ -1,0 +1,45 @@
+#!/usr/bin/env node
+
+const fs = require( 'fs-extra' );
+const path = require( 'path' );
+const { execSync } = require( 'child_process' );
+
+function exists( fileOrDir ) {
+    return fs.existsSync( fileOrDir );
+}
+
+function getPath( ...fileOrDir ) {
+    return path.join( __dirname, ...fileOrDir );
+}
+
+const shouldClone = !exists( getPath( 'twemoji' ) );
+
+if ( shouldClone ) {
+    console.log( "About to clone twemoji repository from https://github.com/twitter/twemoji.git" );
+
+    execSync( 'git clone https://github.com/twitter/twemoji.git', { stdio: 'inherit' } );
+} else {
+    console.log( "Update twemoji repository (if it has changed only!)" );
+
+    execSync( 'git pull', { stdio: 'inherit', cwd: getPath( 'twemoji' ) } );
+}
+
+const svgsDir = getPath( 'twemoji', 'assets', 'svg' );
+
+fs.readdir( svgsDir ).then( files => {
+    console.log( "%s files found.", files.length );
+
+    const extLength = ".svg".length;
+
+    const list = files.map( fileName => fileName.substring( 0, fileName.length - extLength ) );
+
+    save( list );
+} ).catch( console.err );
+
+function save( list ) {
+    const outputFile = getPath( 'src/', 'supported-emojis.json' );
+
+    fs.writeJsonSync( outputFile, { list: list } );
+
+    console.log( "Supported emojis list file saved in %s", outputFile );
+}
