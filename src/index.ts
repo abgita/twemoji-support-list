@@ -23,8 +23,22 @@ supportedEmojis.list.forEach((emojiId: string) => {
 });
 
 interface TwemojiSupportList {
+    /**
+     * Returns a boolean indicating whether the twemoji library has an image for 'emojiCodePoint' or not.
+     * <br/>
+     * This method does not perform any input check and expects a not-null lowercase string.
+     *
+     * @param emojiCodePoint
+     */
     unsafeHas(emojiCodePoint: string): boolean;
 
+    /**
+     * Returns a boolean indicating whether the twemoji library has an image for 'emojiCodePoint' or not.
+     * <br/>
+     * This method converts 'emojiCodePoint' to lowercase.
+     *
+     * @param emojiCodePoint
+     */
     has(emojiCodePoint: string): boolean;
 }
 
