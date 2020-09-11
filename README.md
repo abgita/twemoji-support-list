@@ -17,7 +17,7 @@ import twemojiSupportList from 'twemoji-support-list';
 const unknownSourceEmoji = '😀';
 const emojiCodePoint = twemoji.convert.toCodePoint( unknownSourceEmoji );
 
-if ( twemojiSupportList.has( emojiId ) ) {
+if ( twemojiSupportList.has( emojiCodePoint ) ) {
   // Twemoji has an image for 'unknownSourceEmoji'
 }
 ```
