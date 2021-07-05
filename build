@@ -2,39 +2,45 @@
 
 const fs = require( 'fs-extra' );
 const path = require( 'path' );
-const { execSync } = require( 'child_process' );
-
-function exists( fileOrDir ) {
-    return fs.existsSync( fileOrDir );
-}
+const fetch = require( 'node-fetch' );
 
 function getPath( ...fileOrDir ) {
     return path.join( __dirname, ...fileOrDir );
 }
 
-const shouldClone = !exists( getPath( 'twemoji' ) );
-
-if ( shouldClone ) {
-    console.log( "About to clone twemoji repository from https://github.com/twitter/twemoji.git" );
-
-    execSync( 'git clone https://github.com/twitter/twemoji.git', { stdio: 'inherit' } );
-} else {
-    console.log( "Update twemoji repository (if it has changed only!)" );
-
-    execSync( 'git pull', { stdio: 'inherit', cwd: getPath( 'twemoji' ) } );
+function treeUrl( tree ) {
+    return  'https://api.github.com/repos/twitter/twemoji/git/trees/' + tree;
 }
 
-const svgsDir = getPath( 'twemoji', 'assets', 'svg' );
+function getTree( tree ) {
+    const url  = treeUrl(tree);
 
-fs.readdir( svgsDir ).then( files => {
-    console.log( "%s files found.", files.length );
+    return fetch(url, {
+        method: 'get',
+        headers: { 'Accept': 'application/vnd.github.v3+json' },
+    })
+    .then(res => res.json());
+}
 
-    const extLength = ".svg".length;
+getTree( 'master' ).then( res => {
+    const assetsFolderSha = res.tree.filter( t => t.path === 'assets')[0].sha;
 
-    const list = files.map( fileName => fileName.substring( 0, fileName.length - extLength ) );
+    getTree( assetsFolderSha ).then( res => {
+        const svgFolderSha = res.tree.filter( t => t.path === 'svg')[0].sha;
 
-    save( list );
-} ).catch( console.err );
+        const extLength = ".svg".length;
+
+        getTree( svgFolderSha ).then( res => {
+            const list = res.tree.map(item=>{
+                const path = item.path;
+
+                return path.substring( 0, path.length - extLength )
+            });
+
+            save(list);
+        });
+    });
+}).catch(console.error);
 
 function save( list ) {
     const outputFile = getPath( 'src/', 'supported-emojis.json' );
