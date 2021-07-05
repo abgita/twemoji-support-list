@@ -24,4 +24,10 @@ if ( twemojiSupportList.has( emojiCodePoint ) ) {
 
 ## If you only need the list file
 
-Run <code>'./build'</code> and get it from './src/supported-emojis.json'
+```bash
+git clone https://github.com/abgita/twemoji-support-list.git
+cd twemoji-support-list
+npm install && npm run fetch
+```
+
+The get it from './src/supported-emojis.json'
