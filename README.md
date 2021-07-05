@@ -30,4 +30,4 @@ cd twemoji-support-list
 npm install && npm run fetch
 ```
 
-The get it from './src/supported-emojis.json'
+Then get it from './src/supported-emojis.json'
