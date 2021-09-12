@@ -1,5 +1,6 @@
 # 🗒 Twemoji support list
 
+[![Test](https://github.com/abgita/twemoji-support-list/actions/workflows/test.js.yml/badge.svg)](https://github.com/abgita/twemoji-support-list/actions/workflows/test.js.yml)
 [![npm](https://img.shields.io/npm/v/twemoji-support-list?label=npm)](https://www.npmjs.com/package/twemoji-support-list "npm")
 
 ## Installation
